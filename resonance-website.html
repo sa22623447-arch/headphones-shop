@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Resonance — Headphones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ── TOKENS ── */
+:root{--c-brown-dark:#52483E;--c-brown-mid:#8B8782;--c-brown-light:#94915B;--c-grey-dark:#3B3B3B;--c-grey-mid:#666666;--c-grey-200:#D8D8D8;--c-bg:#F5F5F5;--c-white:#FFFFFF;--c-black:#000000;--c-swatch-yellow:#D8B74B;--c-swatch-green:#94915B;--c-swatch-red:#883D39;--g-hero:linear-gradient(to bottom,#D2CDC6,#F5F5F5);--g-footer:linear-gradient(to bottom,#F5F5F5,#D2CDC6);--g-feature-warm:linear-gradient(to bottom,#D2CDC6,#F8BF93);--g-feature-neutral:linear-gradient(to bottom,#D2CDC6,#F2EBE3);--g-feature-yellow:linear-gradient(to bottom,#D8B74B,#F2EBE3);--g-sustainability:linear-gradient(to bottom,#D2CDC6,#F2EBE3);--g-btn-dark:linear-gradient(to bottom,#52483E,#8B8782);--font:'Poppins',sans-serif;--r-pill:24px;--r-card:24px;--r-detail:24px;--nav-h:72px;}
+
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--c-bg);color:var(--c-brown-dark);overflow-x:hidden;}
+img{max-width:100%;height:auto;display:block;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;background:none;border:none;font-family:inherit;}
+
+/* ── PAGE SYSTEM ── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── CONTAINER ── */
+.container{width:100%;max-width:1280px;margin:0 auto;padding:0 24px;}
+@media(min-width:1024px){.container{padding:0 80px;}}
+
+/* ── TYPE HELPERS ── */
+.t-xl{font-size:clamp(32px,5vw,56px);font-weight:600;color:var(--c-brown-dark);text-transform:capitalize;line-height:1.1;}
+.t-lg{font-size:clamp(28px,4vw,48px);font-weight:600;color:var(--c-brown-dark);text-transform:capitalize;line-height:1.1;}
+.t-sub{font-size:clamp(16px,2vw,24px);font-weight:400;color:var(--c-brown-mid);line-height:1.5;}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;transition:background .3s,backdrop-filter .3s;}
+.nav--scrolled{background:rgba(245,245,245,.9);backdrop-filter:blur(14px);}
+.nav__inner{display:flex;align-items:center;justify-content:space-between;height:var(--nav-h);padding:0 24px;max-width:1280px;margin:0 auto;}
+.nav__logo{display:flex;align-items:center;gap:3px;font-size:19.6px;font-weight:600;color:var(--c-brown-dark);cursor:pointer;}
+.nav__logo:hover{opacity:.75;}
+.nav__links{display:none;align-items:center;gap:16px;}
+.nav__link{font-size:16px;color:var(--c-grey-mid);padding:10px 24px;cursor:pointer;transition:color .2s;}
+.nav__link:hover,.nav__link.active{color:var(--c-brown-dark);}
+.nav__burger{display:flex;padding:4px;}
+.nav__drawer{display:none;position:fixed;inset:0;top:var(--nav-h);background:var(--c-bg);z-index:199;flex-direction:column;align-items:center;justify-content:center;gap:40px;}
+.nav__drawer.open{display:flex;}
+.nav__drawer a{font-size:clamp(28px,6vw,40px);font-weight:600;color:var(--c-brown-dark);cursor:pointer;}
+.nav__drawer a:hover{color:var(--c-brown-mid);}
+@media(min-width:1024px){.nav__links{display:flex;}.nav__burger{display:none;}}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;font-size:16px;font-weight:400;padding:10px 32px;border-radius:var(--r-pill);cursor:pointer;transition:opacity .2s,transform .15s;white-space:nowrap;}
+.btn:hover{opacity:.85;transform:translateY(-1px);}
+.btn--dark{background:var(--g-btn-dark);color:#fff;border:1px solid #000;}
+.btn--outline{background:var(--c-bg);color:#000;border:1px solid var(--c-brown-mid);}
+.btn--full{width:100%;}
+
+/* ── SWATCHES ── */
+.swatches{display:flex;align-items:center;gap:40px;}
+.swatch{width:60px;height:60px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:transform .2s,border-color .2s;}
+.swatch:hover{transform:scale(1.1);}
+.swatch--y{background:var(--c-swatch-yellow);}
+.swatch--g{background:var(--c-swatch-green);}
+.swatch--r{background:var(--c-swatch-red);}
+.swatch.active{border-color:var(--c-brown-dark);}
+@media(max-width:767px){.swatch{width:40px;height:40px;}.swatches{gap:26px;}}
+
+/* ══════════════════════════════════════════
+   PAGE 1 — HOMEPAGE
+══════════════════════════════════════════ */
+
+/* Hero */
+.hero{position:relative;background:var(--g-hero);min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:80px;overflow:hidden;padding-top:var(--nav-h);}
+.hero__content{position:relative;z-index:1;width:100%;display:flex;flex-direction:column;align-items:center;}
+.hero__t1{font-size:clamp(58px,14vw,180px);font-weight:600;color:var(--c-brown-dark);text-align:center;line-height:.95;z-index:3;letter-spacing:-0.02em;}
+.hero__img-wrap{position:relative;z-index:2;width:clamp(260px,65vw,900px);aspect-ratio:1;margin:-6% 0;pointer-events:none;border-radius:50%;overflow:hidden;}
+.hero__img-wrap img{width:100%;height:100%;object-fit:cover;}
+.hero__t2{font-size:clamp(58px,14vw,180px);font-weight:600;background:linear-gradient(to top,#DACCBC,#AFA497);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;line-height:.95;z-index:1;letter-spacing:-0.02em;}
+
+/* Carousel section */
+.carousel-sec{padding:42px 0;background:var(--c-bg);}
+.carousel-sec .container{display:flex;flex-direction:column;align-items:center;gap:24px;}
+.carousel-sec__hdr{display:flex;flex-direction:column;gap:16px;text-align:center;max-width:860px;width:100%;}
+.hp-carousel{display:flex;align-items:center;justify-content:center;width:100%;overflow:hidden;}
+.hp-c-item{flex-shrink:0;border-radius:50%;overflow:hidden;}
+.hp-c-item img{width:100%;height:100%;object-fit:cover;}
+.hp-c-blur{width:clamp(100px,22vw,420px);aspect-ratio:1;filter:blur(6px);opacity:.65;}
+.hp-c-main{width:clamp(180px,42vw,660px);aspect-ratio:1;z-index:1;transition:filter .4s;}
+.color-lbl{font-size:clamp(15px,2vw,24px);color:var(--c-brown-mid);text-align:center;}
+
+@media(min-width:1024px){.carousel-sec{padding:80px 0;}}
+
+/* Feature scroll */
+.feat-scroll{overflow:hidden;}
+.feat-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:24px;scrollbar-width:none;}
+.feat-track::-webkit-scrollbar{display:none;}
+.feat-card{flex-shrink:0;width:clamp(280px,75vw,420px);border-radius:var(--r-card);overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;}
+.feat-card__txt{padding:40px 32px;}
+.feat-card__txt p{font-size:clamp(18px,2.5vw,32px);font-weight:500;color:var(--c-grey-dark);line-height:1.3;}
+.feat-card__img{width:100%;aspect-ratio:1;overflow:hidden;}
+.feat-card__img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.feat-card:hover .feat-card__img img{transform:scale(1.04);}
+.fc-warm{background:var(--g-feature-warm);}
+.fc-neutral{background:var(--g-feature-neutral);}
+.fc-yellow{background:var(--g-feature-yellow);}
+
+@media(min-width:1024px){
+  .feat-track{padding:24px 80px;gap:16px;}
+  .feat-card{width:clamp(380px,32vw,520px);flex-direction:row;}
+  .feat-card__img{width:45%;min-height:420px;}
+  .feat-card__txt{flex:1;display:flex;align-items:center;}
+}
+
+/* Detail gallery */
+.detail-sec{padding:42px 0 80px;}
+.detail-sec .container{margin-bottom:42px;}
+.detail-hdr{display:flex;flex-direction:column;gap:16px;text-align:center;max-width:860px;margin:0 auto;}
+.gallery{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 24px;scrollbar-width:none;}
+.gallery::-webkit-scrollbar{display:none;}
+.gallery__item{flex-shrink:0;width:clamp(220px,55vw,386px);aspect-ratio:1;border-radius:var(--r-detail);overflow:hidden;scroll-snap-align:start;}
+.gallery__item img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.gallery__item:hover img{transform:scale(1.05);}
+@media(min-width:1024px){.gallery{padding:0 80px;}}
+
+/* Dreamlike CTA */
+.dream{position:relative;height:clamp(560px,75vh,894px);display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(40px,6vw,80px);overflow:hidden;}
+.dream__bg{position:absolute;inset:0;z-index:0;}
+.dream__bg img{width:100%;height:100%;object-fit:cover;}
+.dream__bg::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.38);}
+.dream__content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center;padding:0 24px;}
+.dream__t{font-size:clamp(44px,9vw,86px);font-weight:600;color:#fff;line-height:1.15;}
+.dream__price{font-size:clamp(17px,2.5vw,24px);color:#fff;}
+
+/* ══════════════════════════════════════════
+   PAGE 2 — COMPARE
+══════════════════════════════════════════ */
+.compare-page{padding-top:calc(var(--nav-h)+42px);padding-bottom:80px;}
+.compare-hdr{text-align:center;max-width:860px;margin:0 auto 42px;display:flex;flex-direction:column;gap:8px;}
+.compare-grid{display:grid;grid-template-columns:1fr;gap:24px;max-width:1080px;margin:0 auto;}
+@media(min-width:768px){.compare-grid{grid-template-columns:1fr 1fr;}.compare-page{padding-top:calc(var(--nav-h)+80px);}}
+
+.prod-card{background:var(--c-white);border-radius:var(--r-card);display:flex;flex-direction:column;gap:42px;padding-bottom:60px;}
+.prod-card__hdr{background:var(--c-bg);border-radius:var(--r-card);padding:24px;display:flex;flex-direction:column;gap:16px;align-items:center;}
+.prod-card__name{font-size:clamp(22px,4vw,42px);font-weight:600;color:var(--c-brown-dark);text-align:center;text-transform:capitalize;}
+.prod-card__img{width:clamp(140px,28vw,300px);aspect-ratio:1;border-radius:50%;overflow:hidden;}
+.prod-card__img img{width:100%;height:100%;object-fit:cover;}
+.prod-card__price{font-size:clamp(14px,1.6vw,18px);color:var(--c-brown-mid);text-align:center;}
+.prod-card__feats{display:flex;flex-direction:column;gap:28px;padding:0 24px;}
+.f-row{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;}
+.f-row span{font-size:clamp(13px,1.4vw,16px);color:var(--c-grey-mid);line-height:1.4;}
+.f-row--dim span{color:var(--c-brown-mid);}
+.f-row__ico{width:30px;height:30px;display:flex;align-items:center;justify-content:center;}
+
+/* ══════════════════════════════════════════
+   PAGE 3 — TECH SPECS
+══════════════════════════════════════════ */
+.specs-page{padding-top:var(--nav-h);}
+.spec-row{display:flex;flex-wrap:wrap;gap:24px;padding:42px 24px;border-top:1px solid var(--c-grey-200);}
+.spec-row:first-child{border-top:none;}
+.spec-row__lbl{font-size:clamp(22px,3vw,32px);font-weight:600;color:var(--c-brown-dark);text-transform:capitalize;width:100%;}
+.spec-row__body{flex:1;min-width:min(100%,320px);display:flex;flex-direction:column;}
+.spec-row__body p{font-size:clamp(14px,1.6vw,18px);color:var(--c-brown-mid);line-height:50px;}
+.spec-row__body strong{font-weight:700;}
+.spec-row--color{align-items:flex-start;}
+.spec-product-img{width:clamp(180px,38vw,300px);aspect-ratio:7/9;border-radius:50%;overflow:hidden;}
+.spec-product-img img{width:100%;height:100%;object-fit:cover;transition:opacity .35s;}
+.spec-row--sustain{background:var(--g-sustainability);}
+@media(min-width:1024px){
+  .specs-page{padding-top:var(--nav-h);}
+  .spec-row{flex-wrap:nowrap;gap:42px;padding:80px 120px;}
+  .spec-row__lbl{width:300px;flex-shrink:0;}
+}
+
+/* ══════════════════════════════════════════
+   FOOTER (shared)
+══════════════════════════════════════════ */
+.footer{background:var(--g-footer);padding-top:80px;}
+.footer__top{display:flex;flex-direction:column;align-items:center;gap:32px;padding-bottom:42px;text-align:center;}
+.footer__hl{font-size:clamp(26px,4vw,42px);font-weight:600;color:var(--c-brown-dark);text-transform:capitalize;}
+.footer__sub{font-size:clamp(15px,1.6vw,20px);color:var(--c-brown-mid);line-height:1.6;}
+.footer__btns{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+.footer__bot{display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px 24px;border-top:1px solid var(--c-brown-mid);}
+.footer__logo{display:flex;align-items:center;gap:3px;font-size:19.6px;font-weight:600;color:var(--c-brown-dark);}
+.footer__right{display:flex;flex-direction:column;align-items:center;gap:16px;}
+.footer__copy{font-size:16px;color:var(--c-brown-dark);}
+.footer__social{display:flex;gap:16px;}
+.footer__si{opacity:.65;transition:opacity .2s,transform .2s;}
+.footer__si:hover{opacity:1;transform:translateY(-2px);}
+@media(min-width:768px){
+  .footer__bot{flex-direction:row;justify-content:space-between;padding:16px 80px;}
+  .footer__right{flex-direction:row;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav class="nav" id="nav">
+  <div class="nav__inner">
+    <div class="nav__logo" onclick="showPage('home')">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="10" width="3" height="6" rx="1.5" fill="#52483E"/><rect x="7" y="6" width="3" height="14" rx="1.5" fill="#52483E"/><rect x="12" y="2" width="3" height="22" rx="1.5" fill="#52483E"/><rect x="17" y="6" width="3" height="14" rx="1.5" fill="#52483E"/><rect x="22" y="10" width="3" height="6" rx="1.5" fill="#52483E"/></svg>
+      <span>Resonance</span>
+    </div>
+    <div class="nav__links">
+      <span class="nav__link active" id="nav-home" onclick="showPage('home')">Home</span>
+      <span class="nav__link" id="nav-specs" onclick="showPage('specs')">Tech Specs</span>
+      <button class="btn btn--dark" id="nav-compare" onclick="showPage('compare')">Compare</button>
+    </div>
+    <button class="nav__burger" id="hamburger" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect y="4" width="24" height="2" rx="1" fill="#52483E"/><rect y="11" width="24" height="2" rx="1" fill="#52483E"/><rect y="18" width="24" height="2" rx="1" fill="#52483E"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="nav__drawer" id="navDrawer">
+  <a onclick="showPage('home');closeDrawer()">Home</a>
+  <a onclick="showPage('specs');closeDrawer()">Tech Specs</a>
+  <a onclick="showPage('compare');closeDrawer()">Compare</a>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE 1 — HOMEPAGE
+══════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__content">
+      <h1 class="hero__t1">Resonance</h1>
+      <div class="hero__img-wrap" id="heroImgWrap">
+        <img id="heroImg" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=85" alt="Aura Pro II"/>
+      </div>
+      <h2 class="hero__t2">Aura Pro II</h2>
+    </div>
+  </section>
+
+  <!-- Carousel / Color Picker -->
+  <section class="carousel-sec">
+    <div class="container">
+      <div class="carousel-sec__hdr">
+        <h2 class="t-lg">Your Style. Your Sound.</h2>
+        <p class="t-sub">Studio-grade acoustics that dissolve distractions and awaken clarity.</p>
+      </div>
+      <div class="hp-carousel">
+        <div class="hp-c-item hp-c-blur">
+          <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500&q=55" alt=""/>
+        </div>
+        <div class="hp-c-item hp-c-main" id="mainHp">
+          <img id="mainHpImg" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700&q=80" alt="Headphones"/>
+        </div>
+        <div class="hp-c-item hp-c-blur">
+          <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&q=55" alt=""/>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:32px;">
+        <div class="swatches" id="homeSwatches">
+          <button class="swatch swatch--y" data-color="yellow" aria-label="Yellow"></button>
+          <button class="swatch swatch--g active" data-color="green" aria-label="Green"></button>
+          <button class="swatch swatch--r" data-color="red" aria-label="Red"></button>
+        </div>
+        <p class="color-lbl">Choose a color that fits your flow.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Cards -->
+  <section class="feat-scroll">
+    <div class="feat-track">
+      <div class="feat-card fc-warm">
+        <div class="feat-card__txt"><p>Deep lows. Lush mids. Airy highs. All perfectly in balance.</p></div>
+        <div class="feat-card__img"><img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500&q=80" alt="Sound quality"/></div>
+      </div>
+      <div class="feat-card fc-neutral">
+        <div class="feat-card__txt"><p>Silence distractions. Control everything with a gentle tap.</p></div>
+        <div class="feat-card__img"><img src="https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=500&q=80" alt="ANC"/></div>
+      </div>
+      <div class="feat-card fc-yellow">
+        <div class="feat-card__txt"><p>Thoughtfully packed in plastic-free, high quality materials.</p></div>
+        <div class="feat-card__img"><img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=500&q=80" alt="Sustainability"/></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Detail Gallery -->
+  <section class="detail-sec">
+    <div class="container">
+      <div class="detail-hdr">
+        <h2 class="t-lg">Every Detail matters</h2>
+        <p class="t-sub">From the stitch to the signal, precision lives here.</p>
+      </div>
+    </div>
+    <div class="gallery">
+      <div class="gallery__item"><img src="https://images.unsplash.com/photo-1599669454699-248893623440?w=400&q=80" alt=""/></div>
+      <div class="gallery__item"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt=""/></div>
+      <div class="gallery__item"><img src="https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?w=400&q=80" alt=""/></div>
+      <div class="gallery__item"><img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&q=80" alt=""/></div>
+      <div class="gallery__item"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt=""/></div>
+      <div class="gallery__item"><img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80" alt=""/></div>
+    </div>
+  </section>
+
+  <!-- Dreamlike CTA -->
+  <section class="dream">
+    <div class="dream__bg"><img src="https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=1920&q=80" alt="Dreamlike"/></div>
+    <div class="dream__content">
+      <h2 class="dream__t">Dreamlike Sound</h2>
+      <p class="dream__price">Starting at $320 — Available Now.</p>
+      <button class="btn btn--outline" onclick="showPage('compare')">Buy Now</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <h3 class="footer__hl">Sound. Presence. Purpose.</h3>
+        <p class="footer__sub">Focused on crafting immersive audio experiences.<br>We believe sound should not just be heard—it should move you.</p>
+        <div class="footer__btns">
+          <button class="btn btn--outline" onclick="showPage('home')">Aura Pro II</button>
+          <button class="btn btn--outline" onclick="showPage('compare')">Flow II</button>
+        </div>
+      </div>
+      <div class="footer__bot">
+        <div class="footer__logo">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="10" width="3" height="6" rx="1.5" fill="#52483E"/><rect x="7" y="6" width="3" height="14" rx="1.5" fill="#52483E"/><rect x="12" y="2" width="3" height="22" rx="1.5" fill="#52483E"/><rect x="17" y="6" width="3" height="14" rx="1.5" fill="#52483E"/><rect x="22" y="10" width="3" height="6" rx="1.5" fill="#52483E"/></svg>
+          <span>Resonance</span>
+        </div>
+        <div class="footer__right">
+          <span class="footer__copy">© 2025 Resonance. All rights reserved.</span>
+          <div class="footer__social">
+            <a href="#" class="footer__si" aria-label="Discord"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.055a19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z" fill="#52483E"/></svg></a>
+            <a href="#" class="footer__si" aria-label="X"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.258 5.63 5.906-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="#52483E"/></svg></a>
+            <a href="#" class="footer__si" aria-label="Meta"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z" fill="#52483E"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div><!-- /page-home -->
+
+
+<!-- ══════════════════════════════════════
+     PAGE 2 — COMPARE
+══════════════════════════════════════ -->
+<div class="page" id="page-compare">
+  <main class="compare-page">
+    <div class="container">
+      <div class="compare-hdr">
+        <h1 class="t-xl">Compare Resonance models</h1>
+        <p class="t-sub">Get help choosing. Chat with a Specialist.</p>
+      </div>
+      <div class="compare-grid">
+
+        <!-- Aura Pro II -->
+        <div class="prod-card">
+          <div class="prod-card__hdr">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;">
+              <h2 class="prod-card__name">Aura Pro II</h2>
+              <div class="prod-card__img"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80&sat=80&hue-rotate=80" alt="Aura Pro II"/></div>
+            </div>
+            <p class="prod-card__price">Starting at $320</p>
+            <button class="btn btn--dark btn--full">Buy Now</button>
+          </div>
+          <div class="prod-card__feats">
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="#52483E" stroke-width="2"/><circle cx="12" cy="14" r="3" stroke="#52483E" stroke-width="2"/><path d="M8 6h8" stroke="#52483E" stroke-width="2" stroke-linecap="round"/></svg></div><span>R1 Chip</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5.586 5.586A8 8 0 0119.07 17.07M3 3l18 18" stroke="#52483E" stroke-width="2" stroke-linecap="round"/></svg></div><span>2× Active Noise Cancellation</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#52483E" stroke-width="2"/><path d="M12 8v4l2 2" stroke="#52483E" stroke-width="2" stroke-linecap="round"/></svg></div><span>Personalized Spatial Audio</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18V5l12-2v13" stroke="#52483E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" stroke="#52483E" stroke-width="2"/><circle cx="18" cy="16" r="3" stroke="#52483E" stroke-width="2"/></svg></div><span>Lossless Audio</span></div>
+            <div class="f-row f-row--dim"><div class="f-row__ico"><svg width="16" height="2" viewBox="0 0 16 2"><rect width="16" height="2" rx="1" fill="#8B8782"/></svg></div><span>None</span></div>
+            <div class="f-row f-row--dim"><div class="f-row__ico"><svg width="16" height="2" viewBox="0 0 16 2"><rect width="16" height="2" rx="1" fill="#8B8782"/></svg></div><span>None</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="1" y="6" width="17" height="12" rx="2" stroke="#52483E" stroke-width="2"/><path d="M23 11v3" stroke="#52483E" stroke-width="2" stroke-linecap="round"/></svg></div><span>Up to 17 hours listening</span></div>
+            <div class="f-row f-row--dim"><div class="f-row__ico"><svg width="16" height="2" viewBox="0 0 16 2"><rect width="16" height="2" rx="1" fill="#8B8782"/></svg></div><span>None</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2a3 3 0 013 3v7a3 3 0 01-6 0V5a3 3 0 013-3z" stroke="#52483E" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#52483E" stroke-width="2" stroke-linecap="round"/></svg></div><span>5 microphones total</span></div>
+          </div>
+        </div>
+
+        <!-- Flow II -->
+        <div class="prod-card">
+          <div class="prod-card__hdr">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;">
+              <h2 class="prod-card__name">Flow II</h2>
+              <div class="prod-card__img"><img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&q=80" alt="Flow II"/></div>
+            </div>
+            <p class="prod-card__price">Starting at $160</p>
+            <button class="btn btn--dark btn--full">Buy Now</button>
+          </div>
+          <div class="prod-card__feats">
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="#52483E" stroke-width="2"/><circle cx="12" cy="14" r="3" stroke="#52483E" stroke-width="2"/><path d="M8 6h8" stroke="#52483E" stroke-width="2" stroke-linecap="round"/></svg></div><span>R2 Chip</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5.586 5.586A8 8 0 0119.07 17.07M3 3l18 18" stroke="#52483E" stroke-width="2" stroke-linecap="round"/></svg></div><span>Active Noise Cancellation</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#52483E" stroke-width="2"/><path d="M12 8v4l2 2" stroke="#52483E" stroke-width="2" stroke-linecap="round"/></svg></div><span>Personalized Spatial Audio</span></div>
+            <div class="f-row f-row--dim"><div class="f-row__ico"><svg width="16" height="2" viewBox="0 0 16 2"><rect width="16" height="2" rx="1" fill="#8B8782"/></svg></div><span>None</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 11a1 1 0 011-1h1a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zM17 11a1 1 0 011-1h1a1 1 0 011 1v3a1 1 0 01-1 1h-1a1 1 0 01-1-1v-3z" stroke="#52483E" stroke-width="2"/></svg></div><span>Hearing Test &amp; Protection</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M7 3H4a1 1 0 00-1 1v16a1 1 0 001 1h16a1 1 0 001-1V7l-5-4z" stroke="#52483E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Touch sensor</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="1" y="6" width="17" height="12" rx="2" stroke="#52483E" stroke-width="2"/><path d="M23 11v3" stroke="#52483E" stroke-width="2" stroke-linecap="round"/></svg></div><span>Up to 6 hours listening</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3c-3.5 4-5 7-5 9a5 5 0 0010 0c0-2-1.5-5-5-9z" stroke="#52483E" stroke-width="2" stroke-linejoin="round"/></svg></div><span>Water resistant</span></div>
+            <div class="f-row"><div class="f-row__ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2a3 3 0 013 3v7a3 3 0 01-6 0V5a3 3 0 013-3z" stroke="#52483E" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#52483E" stroke-width="2" stroke-linecap="round"/></svg></div><span>Dual beamforming microphones</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <h3 class="footer__hl">Sound. Presence. Purpose.</h3>
+        <p class="footer__sub">Focused on crafting immersive audio experiences.<br>We believe sound should not just be heard—it should move you.</p>
+        <div class="footer__btns">
+          <button class="btn btn--outline" onclick="showPage('home')">Aura Pro II</button>
+          <button class="btn btn--outline" onclick="showPage('compare')">Flow II</button>
+        </div>
+      </div>
+      <div class="footer__bot">
+        <div class="footer__logo"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="10" width="3" height="6" rx="1.5" fill="#52483E"/><rect x="7" y="6" width="3" height="14" rx="1.5" fill="#52483E"/><rect x="12" y="2" width="3" height="22" rx="1.5" fill="#52483E"/><rect x="17" y="6" width="3" height="14" rx="1.5" fill="#52483E"/><rect x="22" y="10" width="3" height="6" rx="1.5" fill="#52483E"/></svg><span>Resonance</span></div>
+        <div class="footer__right"><span class="footer__copy">© 2025 Resonance. All rights reserved.</span><div class="footer__social"><a href="#" class="footer__si"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.055a19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z" fill="#52483E"/></svg></a><a href="#" class="footer__si"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.258 5.63 5.906-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="#52483E"/></svg></a></div></div>
+      </div>
+    </div>
+  </footer>
+</div><!-- /page-compare -->
+
+
+<!-- ══════════════════════════════════════
+     PAGE 3 — TECH SPECS
+══════════════════════════════════════ -->
+<div class="page" id="page-specs">
+  <main class="specs-page">
+
+    <div class="spec-row spec-row--color">
+      <div class="spec-row__lbl">Color</div>
+      <div class="spec-row__body" style="flex-direction:column;gap:80px;align-items:flex-start;">
+        <div class="spec-product-img"><img id="specImg" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="Headphone"/></div>
+        <div class="swatches" id="specsSwatches">
+          <button class="swatch swatch--y" data-img-hue="30" aria-label="Yellow"></button>
+          <button class="swatch swatch--g active" data-img-hue="90" aria-label="Green"></button>
+          <button class="swatch swatch--r" data-img-hue="330" aria-label="Red"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-row"><div class="spec-row__lbl">Audio<br>Technology</div>
+      <div class="spec-row__body">
+        <p>Custom-tuned 40mm Resonance™ drivers for deep bass.</p>
+        <p>Ultra-low distortion signal processing.</p>
+        <p>Adaptive Sound Sculpting™ — real-time EQ.</p>
+        <p>Spatial Audio Calibration with dynamic head tracking.</p>
+        <p>Natural Voice Isolation for calls, focus, and immersive listening.</p>
+        <p>Pressure-balancing acoustic vents for long-wear comfort.</p>
+      </div>
+    </div>
+
+    <div class="spec-row"><div class="spec-row__lbl">Intelligence</div>
+      <div class="spec-row__body">
+        <p>Dual noise-targeting microphones.</p>
+        <p>Internal ear-position mic for personalized audio tuning.</p>
+        <p>Proximity &amp; motion sensors to detect wear and usage.</p>
+        <p>Gesture-aware force sensor for effortless control.</p>
+        <p>Accelerometer-assisted voice capture for clarity on the move.</p>
+      </div>
+    </div>
+
+    <div class="spec-row"><div class="spec-row__lbl">Power</div>
+      <div class="spec-row__body">
+        <p>Custom-designed <strong>R2 Sound Core</strong> chip.</p>
+        <p>Advanced audio algorithms tuned for emotional clarity.</p>
+        <p>Onboard neural audio engine for Spatial Audio and Adaptive EQ.</p>
+      </div>
+    </div>
+
+    <div class="spec-row"><div class="spec-row__lbl">Controls</div>
+      <div class="spec-row__body">
+        <p>Tap once to play/pause or answer a call.</p>
+        <p>Tap twice to skip forward or end a call.</p>
+        <p>Tap three times to rewind.</p>
+        <p>Press and hold to access voice assistant.</p>
+        <p>Automatic mute when removed, smart resume when worn.</p>
+      </div>
+    </div>
+
+    <div class="spec-row"><div class="spec-row__lbl">Built for the Elements</div>
+      <div class="spec-row__body">
+        <p>Rated <strong>IPX4</strong> for sweat and weather resistance.</p>
+        <p>Designed for long sessions, light activity, or relaxed stillness.</p>
+      </div>
+    </div>
+
+    <div class="spec-row"><div class="spec-row__lbl">Battery</div>
+      <div class="spec-row__body">
+        <p>Up to <strong>36 hours</strong> total listening time with case.</p>
+        <p>Up to <strong>6.5 hours</strong> on a single charge.</p>
+        <p>Fast charge: <strong>10 minutes = 2 hours of play.</strong></p>
+        <p>USB-C charging + Qi-compatible wireless charging.</p>
+        <p>LED status light + Find My compatible tone alert.</p>
+      </div>
+    </div>
+
+    <div class="spec-row"><div class="spec-row__lbl">Connectivity</div>
+      <div class="spec-row__body">
+        <p>Bluetooth® 5.3 low-latency audio.</p>
+        <p>Multipoint connection with auto handoff.</p>
+        <p>Seamless pairing across all your devices.</p>
+      </div>
+    </div>
+
+    <div class="spec-row"><div class="spec-row__lbl">Materials</div>
+      <div class="spec-row__body">
+        <p>100% recycled aluminum in internal frames.</p>
+        <p>Bio-based mesh ear padding.</p>
+        <p>Rare earth magnets sourced from reclaimed materials.</p>
+        <p>Plastic-free, fiber-based packaging.</p>
+        <p>Assembled in Zero Waste-certified facilities.</p>
+      </div>
+    </div>
+
+    <div class="spec-row spec-row--sustain"><div class="spec-row__lbl">Sustainability &amp; Materials</div>
+      <div class="spec-row__body">
+        <p>100% recycled aluminum in internal frames.</p>
+        <p>Bio-based mesh ear padding.</p>
+        <p>Rare earth magnets sourced from reclaimed materials.</p>
+        <p>Plastic-free, fiber-based packaging.</p>
+        <p>Assembled in Zero Waste-certified facilities.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <h3 class="footer__hl">Sound. Presence. Purpose.</h3>
+        <p class="footer__sub">Focused on crafting immersive audio experiences.<br>We believe sound should not just be heard—it should move you.</p>
+        <div class="footer__btns">
+          <button class="btn btn--outline" onclick="showPage('home')">Aura Pro II</button>
+          <button class="btn btn--outline" onclick="showPage('compare')">Flow II</button>
+        </div>
+      </div>
+      <div class="footer__bot">
+        <div class="footer__logo"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="10" width="3" height="6" rx="1.5" fill="#52483E"/><rect x="7" y="6" width="3" height="14" rx="1.5" fill="#52483E"/><rect x="12" y="2" width="3" height="22" rx="1.5" fill="#52483E"/><rect x="17" y="6" width="3" height="14" rx="1.5" fill="#52483E"/><rect x="22" y="10" width="3" height="6" rx="1.5" fill="#52483E"/></svg><span>Resonance</span></div>
+        <div class="footer__right"><span class="footer__copy">© 2025 Resonance. All rights reserved.</span></div>
+      </div>
+    </div>
+  </footer>
+</div><!-- /page-specs -->
+
+
+<script>
+// ── Page Switcher
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  window.scrollTo(0,0);
+  // update nav active states
+  document.querySelectorAll('.nav__link').forEach(l=>l.classList.remove('active'));
+  const map={home:'nav-home',specs:'nav-specs',compare:'nav-compare'};
+  const el=document.getElementById(map[name]);
+  if(el) el.classList.add('active');
+}
+
+// ── Nav scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('nav--scrolled',window.scrollY>40);
+},{passive:true});
+
+// ── Mobile drawer
+const hamburger=document.getElementById('hamburger');
+const drawer=document.getElementById('navDrawer');
+hamburger.addEventListener('click',()=>drawer.classList.toggle('open'));
+function closeDrawer(){drawer.classList.remove('open');}
+
+// ── Color filter for home hero & carousel
+const colorFilters={
+  yellow:'hue-rotate(25deg) saturate(1.5) brightness(1.05)',
+  green: 'hue-rotate(80deg) saturate(1.3)',
+  red:   'hue-rotate(320deg) saturate(1.4)'
+};
+
+// Home swatches
+document.getElementById('homeSwatches').addEventListener('click',e=>{
+  const sw=e.target.closest('.swatch');
+  if(!sw)return;
+  document.querySelectorAll('#homeSwatches .swatch').forEach(s=>s.classList.remove('active'));
+  sw.classList.add('active');
+  const f=colorFilters[sw.dataset.color]||'';
+  const img=document.getElementById('mainHpImg');
+  if(img) img.style.filter=f;
+  const heroImg=document.getElementById('heroImg');
+  if(heroImg) heroImg.style.filter=f;
+});
+
+// Specs swatches
+document.getElementById('specsSwatches').addEventListener('click',e=>{
+  const sw=e.target.closest('.swatch');
+  if(!sw)return;
+  document.querySelectorAll('#specsSwatches .swatch').forEach(s=>s.classList.remove('active'));
+  sw.classList.add('active');
+  const img=document.getElementById('specImg');
+  if(img){
+    img.style.opacity='0';
+    const hue=sw.dataset.imgHue||'0';
+    setTimeout(()=>{img.style.filter=`hue-rotate(${hue}deg) saturate(1.3)`;img.style.opacity='1';},250);
+  }
+});
+</script>
+</body>
+</html>
